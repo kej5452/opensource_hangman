@@ -40,6 +40,7 @@ void drawscreen(int chance, char* remained_char, char* answer_word) {
 }
 
 void drawintro() {
+	system("clear");
 	printf("-------------------------------------------\n");
 	printf("		HANGMAN					\n");
 	printf("-------------------------------------------\n");
