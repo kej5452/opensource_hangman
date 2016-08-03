@@ -28,12 +28,13 @@ int main() {
 
 		drawintro();
 		scanf("%d", &topic);
-		printf("what's your name? : ");
-		scanf("%s",&user.user_name);
+		
 		if (topic == 4) {
 			printf("Quit\n");
 			return 0;
 		}
+		printf("what's your name? : ");
+		scanf("%s",&user.user_name);
 		while (1) {			
 			word = choose_problem(topic);
 			play_game(word);
