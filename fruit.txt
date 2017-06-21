@@ -3,12 +3,12 @@ banana
 orange
 grape
 grapefruit
-kiwi
+strawberry
 mango
 pineapple
 watermelon
 melon
-strawberry
+kiwi
 blueberry
 pear
 plum
