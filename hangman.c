@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <Windows.h>
+//#include <Windows.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX_Chance 7
 #define MAX_STR_LEN 4000
@@ -10,7 +11,8 @@ void drawscreen(int chance, char* used_char, char* answer_word);
 void drawintro();
 char* choose_problem(int topic);
 void play_game(char* word);
-boolean compare_answer(char* word, char answer);
+bool compare_answer(char* word, char answer);
+int getTotalLine(FILE* fp);
 char*  trim(char *s); // 문자열 좌우 공백 모두 삭제 함수
 char* ltrim(char *s); // 문자열 좌측 공백 제거 함수
 char* rtrim(char* s); // 문자열 우측 공백 제거 함수
@@ -49,7 +51,7 @@ void play_game(char* word) {
 	answer_word[strlen(answer_word) - 1] = '\0';
 	int index_used = 0;
 	int used_chance = 0;
-	boolean success = FALSE;
+	bool success = 0;
 	char answer = ' ';
 	int i;
 	
@@ -57,7 +59,7 @@ void play_game(char* word) {
 		drawscreen(used_chance, remained_char, answer_word);
 		scanf("%c", &answer);
 		scanf("%c", &answer);
-		if (compare_answer(word, answer) == FALSE) {
+		if (compare_answer(word, answer) == 0) {
 			used_chance++;
 			remained_char[answer - 97] = ' ';
 		}
@@ -67,9 +69,14 @@ void play_game(char* word) {
 				remained_char[answer - 97] = ' ';
 			}
 		}
-		if (strcmp(trim(answer_word), word) == 0) success = TRUE;
-		drawscreen(used_chance, remained_char, answer_word);
-		if (used_chance < MAX_Chance && success == TRUE) {
+		if (strcmp(trim(answer_word), word) == 0) success = 1;
+		if (used_chance >= MAX_Chance) {
+			printf("You are wrong! The answer is %s.\n", answer_word);
+			printf("Will you continue to solve the quiz? : 1.yes  2.no\n");
+			scanf("%d", &stopswitch);
+			break;
+		}
+		if (used_chance < MAX_Chance && success == 1) {
 			score += 10;
 			printf("\n");
 			printf("You are right! The answer is %s.\n", answer_word);
@@ -81,13 +88,13 @@ void play_game(char* word) {
 
 }
 
-boolean compare_answer(char* word, char answer) {
+bool compare_answer(char* word, char answer) {
 	int i;
 	int chance;
-	boolean find = FALSE;
+	bool find = 0;
 	for (i = 0;i < strlen(word);i++) {
 		if (word[i] == answer) {
-			find = TRUE;
+			find = 1;
 			break;
 		}	
 	}
@@ -95,7 +102,7 @@ boolean compare_answer(char* word, char answer) {
 }
 
 void drawscreen(int chance, char* remained_char, char* answer_word) {
-	system("cls");
+	system("clear");
 	switch (chance) {
 	case 0:
 		printf("┌───┐\n│\n│\n│\n│\n└──────\n");	
@@ -143,31 +150,41 @@ char* choose_problem(int topic) {
 	char* word = malloc((max_length+2)*sizeof(char));
 	int rand_counter = 0;
 	int i;
+	int line = 0;
 	FILE *problem;
 	switch (topic) {
 	case 1:
 		problem = fopen("fruit.txt", "r");
-		rand_counter = rand() % 15; //각 주제 당 15개의 단어;
+		line = getTotalLine(problem);		
+		rand_counter = rand() % line; //각 주제 당 15개의 단어;
+		rewind(problem);
 		for (i = 0;i < rand_counter;i++) {
 			fgets(word, max_length, problem);
 		}
 		word[strlen(word)-1] = '\0';
+		fclose(problem);
 		break;
 	case 2:
 		problem = fopen("animal.txt", "r");
-		rand_counter = rand() % 15; //각 주제 당 15개의 단어;
+		line = getTotalLine(problem);
+		rand_counter = rand() % line; //각 주제 당 15개의 단어;
+		rewind(problem);
 		for (i = 0;i < rand_counter;i++) {
 			fgets(word, max_length, problem);
 		}
 		word[strlen(word) - 1] = '\0';
+		fclose(problem);
 		break;
 	case 3:
 		problem = fopen("food.txt", "r");
-		rand_counter = rand() % 15; //각 주제 당 15개의 단어;
+		line = getTotalLine(problem);
+		rand_counter = rand() % line; //각 주제 당 15개의 단어;
+		rewind(problem);
 		for (i = 0;i < rand_counter;i++) {
 			fgets(word, max_length, problem);
 		}
 		word[strlen(word) - 1] = '\0';
+		fclose(problem);
 		break;
 	default:
 		break;
@@ -211,8 +228,15 @@ char* ltrim(char *s) {
 	return s;
 }
 
-
 // 문자열 앞뒤 공백 모두 삭제 함수
 char* trim(char *s) {
 	return rtrim(ltrim(s));
+}
+
+int getTotalLine(FILE* fp) {
+	int line = 0;
+	char c;
+	while ((c = fgetc(fp)) != EOF)
+		if (c == '\n') line++;
+	return line+1;
 }
