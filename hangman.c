@@ -23,10 +23,11 @@ int main() {
 
 		drawintro();
 		scanf("%d", &topic);
-		while (1) {
-			if (topic == 4) {
-				break;
-			}
+		if (topic == 4) {
+			printf("Quit\n");
+			return 0;
+		}
+		while (1) {			
 			word = choose_problem(topic);
 			//printf("%s", word);
 			play_game(word);
