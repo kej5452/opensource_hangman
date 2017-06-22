@@ -11,15 +11,25 @@
 void play_game(char* word);
 bool compare_answer(char* word, char answer);
 
-static int stopswitch = 0;
-static int score = 0; 
+typedef struct {
+	char user_name[10];
+	int score;
+}User_info; //user-defined datatype
 
+
+static int stopswitch = 0;
+static User_info user;
 int main() {
 	char* word;
 	int topic = 0;
+	
+	user.score = 0;
+	
 
 		drawintro();
 		scanf("%d", &topic);
+		printf("what's your name? : ");
+		scanf("%s",&user.user_name);
 		if (topic == 4) {
 			printf("Quit\n");
 			return 0;
@@ -28,9 +38,9 @@ int main() {
 			word = choose_problem(topic);
 			play_game(word);
 			if (stopswitch == 2) {
-				printf("Game over! your score is %d.\n", score);
+				printf("Game over! %s's score is %d.\n", user.user_name, user.score);
 				stopswitch = 0;
-				score = 0;					
+				user.score = 0;					
 				break;
 			}
 		}
@@ -43,9 +53,9 @@ void play_game(char* word) {
 	word[strlen(word)-1] = '\0';
 	char* answer_word = malloc((strlen(word))*sizeof(char));
 	memset(answer_word, ' ', strlen(word));
-	answer_word[strlen(word)] = '\0';
-	
-	
+	answer_word[strlen(word)] = '\0';	
+	bool (*ca) (char*, char); //function_pointer
+	ca = &compare_answer;
 	int used_chance = 0;
 	bool success = 0;
 	char answer = ' ';
@@ -55,7 +65,7 @@ void play_game(char* word) {
 		drawscreen(used_chance, remained_char, answer_word);
 		scanf("%c", &answer);
 		scanf("%c", &answer);
-		if (compare_answer(word, answer) == 0) {
+		if ((*ca)(word, answer) == 0) {
 			used_chance++;
 			remained_char[answer - 97] = ' ';
 		}
@@ -74,10 +84,10 @@ void play_game(char* word) {
 			break;
 		}
 		if (used_chance < MAX_CHANCE && success == 1) {
-			score += 10;
+			user.score += 10;
 			printf("\n");
 			printf("You are right! The answer is %s.\n", word);
-			printf("Your score is %d.\n",score);
+			printf("%s's score is %d.\n",user.user_name,user.score);
 			printf("Will you continue to solve the quiz? : 1.yes  2.no\n");
 
 			scanf("%d", &stopswitch);
