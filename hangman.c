@@ -10,7 +10,10 @@
 
 void play_game(char* word);
 bool compare_answer(char* word, char answer);
-
+/**
+*	@typedef User_info
+*	@brief A struct contain User's name and score.
+*/
 typedef struct {
 	char user_name[10];
 	int score;
@@ -48,6 +51,11 @@ int main() {
 		return 0;
 }
 
+/**
+*	@fn play_game	
+*	@param char* word
+*	@brief start game_mode
+*/
 void play_game(char* word) {
 	char remained_char[27] = "abcdefghijklmnopqrstuvwxyz";
 	remained_char[26] = '\0';
@@ -99,7 +107,12 @@ void play_game(char* word) {
 	}
 
 }
-
+/**
+*	@fn compare_answer
+*	@brief compare word and user's answer
+*	@param char* word, char answer
+*	@return whether user inserts right answer.
+*/
 bool compare_answer(char* word, char answer) {
 	int i;
 	bool find = 0;
@@ -111,7 +124,3 @@ bool compare_answer(char* word, char answer) {
 	}
 	return find;
 }
-
-
-
-
