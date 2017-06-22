@@ -45,7 +45,7 @@ void play_game(char* word) {
 	memset(answer_word, ' ', strlen(word));
 	answer_word[strlen(word)] = '\0';
 	
-	int index_used = 0;
+	
 	int used_chance = 0;
 	bool success = 0;
 	char answer = ' ';
@@ -91,7 +91,6 @@ void play_game(char* word) {
 
 bool compare_answer(char* word, char answer) {
 	int i;
-	int chance;
 	bool find = 0;
 	for (i = 0;i < strlen(word);i++) {
 		if (word[i] == answer) {
