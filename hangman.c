@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include <Windows.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -13,12 +12,14 @@ char* choose_problem(int topic);
 void play_game(char* word);
 bool compare_answer(char* word, char answer);
 int getTotalLine(FILE* fp);
-char*  trim(char *s); // ¹®ÀÚ¿­ ÁÂ¿ì °ø¹é ¸ðµÎ »èÁ¦ ÇÔ¼ö
-char* ltrim(char *s); // ¹®ÀÚ¿­ ÁÂÃø °ø¹é Á¦°Å ÇÔ¼ö
-char* rtrim(char* s); // ¹®ÀÚ¿­ ¿ìÃø °ø¹é Á¦°Å ÇÔ¼ö
+char* my_strset(char* word,char padding);
+char*  trim(char *s); 
+char* ltrim(char *s); 
+char* rtrim(char* s); 
 
 static int stopswitch = 0;
 static int score = 0; 
+
 int main() {
 	char* word;
 	int topic = 0;
@@ -46,9 +47,11 @@ int main() {
 void play_game(char* word) {
 	char remained_char[27] = "abcdefghijklmnopqrstuvwxyz";
 	remained_char[26] = '\0';
+	word[strlen(word)-1] = '\0';
 	char* answer_word = malloc((strlen(word))*sizeof(char));
-	answer_word = strset(answer_word, ' ');
-	answer_word[strlen(answer_word) - 1] = '\0';
+	memset(answer_word, ' ', strlen(word));
+	answer_word[strlen(word)] = '\0';
+	
 	int index_used = 0;
 	int used_chance = 0;
 	bool success = 0;
@@ -69,9 +72,10 @@ void play_game(char* word) {
 				remained_char[answer - 97] = ' ';
 			}
 		}
-		if (strcmp(trim(answer_word), word) == 0) success = 1;
-		if (used_chance >= MAX_Chance) {
-			printf("You are wrong! The answer is %s.\n", answer_word);
+		if (!strcmp(answer_word, word)) success = 1;
+		drawscreen(used_chance, remained_char, answer_word);
+		if (used_chance > MAX_Chance) {
+			printf("You are wrong! The answer is %s.\n", word);
 			printf("Will you continue to solve the quiz? : 1.yes  2.no\n");
 			scanf("%d", &stopswitch);
 			break;
@@ -79,9 +83,13 @@ void play_game(char* word) {
 		if (used_chance < MAX_Chance && success == 1) {
 			score += 10;
 			printf("\n");
-			printf("You are right! The answer is %s.\n", answer_word);
+			printf("You are right! The answer is %s.\n", word);
+			printf("Your score is %d.\n",score);
 			printf("Will you continue to solve the quiz? : 1.yes  2.no\n");
+
 			scanf("%d", &stopswitch);
+			free(answer_word);
+			free(word);
 			break;
 		}
 	}
@@ -105,35 +113,34 @@ void drawscreen(int chance, char* remained_char, char* answer_word) {
 	system("clear");
 	switch (chance) {
 	case 0:
-		printf("¦£¦¡¦¡¦¡¦¤\n¦¢\n¦¢\n¦¢\n¦¢\n¦¦¦¡¦¡¦¡¦¡¦¡¦¡\n");	
+		printf("\nâ”Œâ”€â”€â”€â”\nâ”‚\nâ”‚\nâ”‚\nâ”‚\nâ””â”€â”€â”€â”€â”€â”€\n");
 		break;
-	case 1:
-		printf("¦£¦¡¦¡¦¡¦¤\n¦¢¡¡¡Û\n¦¢\n¦¢\n¦¢\n¦¦¦¡¦¡¦¡¦¡¦¡¦¡\n");
+        case 1:
+		printf("\nâ”Œâ”€â”€â”€â”\nâ”‚ã€€â—‹\nâ”‚\nâ”‚\nâ”‚\nâ””â”€â”€â”€â”€â”€â”€\n");
 		break;
-	case 2:
-		printf("¦£¦¡¦¡¦¡¦¤\n¦¢¡¡¡Û\n¦¢¡¡ |\n¦¢\n¦¢\n¦¦¦¡¦¡¦¡¦¡¦¡¦¡\n");
+        case 2:
+		printf("\nâ”Œâ”€â”€â”€â”\nâ”‚ã€€â—‹\nâ”‚ã€€ |\nâ”‚\nâ”‚\nâ””â”€â”€â”€â”€â”€â”€\n");
 		break;
-	case 3:
-		printf("¦£¦¡¦¡¦¡¦¤\n¦¢¡¡¡Û\n¦¢¡¡/|\n¦¢\n¦¢\n¦¦¦¡¦¡¦¡¦¡¦¡¦¡\n");
-		break;
-	case 4:
-		printf("¦£¦¡¦¡¦¡¦¤\n¦¢¡¡¡Û\n¦¢¡¡/|¡¬\n¦¢¡¡\n¦¢\n¦¦¦¡¦¡¦¡¦¡¦¡¦¡\n");
-		break;
-	case 5:
-		printf("¦£¦¡¦¡¦¡¦¤\n¦¢¡¡¡Û\n¦¢¡¡/|¡¬\n¦¢¡¡/\n¦¢\n¦¦¦¡¦¡¦¡¦¡¦¡¦¡\n");
-		break;
-	case 6:
-		printf("¦£¦¡¦¡¦¡¦¤\n¦¢¡¡¡Û\n¦¢¡¡/|¡¬\n¦¢¡¡/¡¬\n¦¢\n¦¦¦¡¦¡¦¡¦¡¦¡¦¡\n");
-		break;
-	case 7:
-		printf("¦£¦¡¦¡¦¡¦¤\n¦¢¡¡¡Û\n¦¢¡¡ X\n¦¢¡¡/|¡¬\n¦¢¡¡/¡¬\n¦¦¦¡¦¡¦¡¦¡¦¡¦¡\n");
-		break;
+        case 3:
+		printf("\nâ”Œâ”€â”€â”€â”\nâ”‚ã€€â—‹\nâ”‚ã€€/|\nâ”‚\nâ”‚\nâ””â”€â”€â”€â”€â”€â”€\n");
+        	break;
+        case 4:
+		printf("\nâ”Œâ”€â”€â”€â”\nâ”‚ã€€â—‹\nâ”‚ã€€/|ï¼¼\nâ”‚ã€€\nâ”‚\nâ””â”€â”€â”€â”€â”€â”€\n");
+        	break;
+        case 5:
+		printf("\nâ”Œâ”€â”€â”€â”\nâ”‚ã€€â—‹\nâ”‚ã€€/|ï¼¼\nâ”‚ã€€/\nâ”‚\nâ””â”€â”€â”€â”€â”€â”€\n");
+        	break;
+        case 6:
+		printf("\nâ”Œâ”€â”€â”€â”\nâ”‚ã€€â—‹\nâ”‚ã€€/|ï¼¼\nâ”‚ã€€/ï¼¼\nâ”‚\nâ””â”€â”€â”€â”€â”€â”€\n");
+        	break;
+        case 7:
+		printf("\nâ”Œâ”€â”€â”€â”\nâ”‚ã€€â—‹\nâ”‚ã€€ X\nâ”‚ã€€/|ï¼¼\nâ”‚ã€€/ï¼¼\nâ””â”€â”€â”€â”€â”€â”€\n");
+        	break;
 	default:
 		break;
 	}
 	printf("The characters that you can use : %s\n", remained_char);
-	printf("your answer : %s\n", answer_word);
-	printf("chance : %d\n", MAX_Chance - chance);
+	printf("your answer : %s\t\tchance : %d\n", answer_word, MAX_Chance - chance);
 	printf("choose the character you want : ");
 }
 
@@ -156,7 +163,7 @@ char* choose_problem(int topic) {
 	case 1:
 		problem = fopen("fruit.txt", "r");
 		line = getTotalLine(problem);		
-		rand_counter = rand() % line; //°¢ ÁÖÁ¦ ´ç 15°³ÀÇ ´Ü¾î;
+		rand_counter = rand() % line; 
 		rewind(problem);
 		for (i = 0;i < rand_counter;i++) {
 			fgets(word, max_length, problem);
@@ -167,7 +174,7 @@ char* choose_problem(int topic) {
 	case 2:
 		problem = fopen("animal.txt", "r");
 		line = getTotalLine(problem);
-		rand_counter = rand() % line; //°¢ ÁÖÁ¦ ´ç 15°³ÀÇ ´Ü¾î;
+		rand_counter = rand() % line; 
 		rewind(problem);
 		for (i = 0;i < rand_counter;i++) {
 			fgets(word, max_length, problem);
@@ -178,59 +185,18 @@ char* choose_problem(int topic) {
 	case 3:
 		problem = fopen("food.txt", "r");
 		line = getTotalLine(problem);
-		rand_counter = rand() % line; //°¢ ÁÖÁ¦ ´ç 15°³ÀÇ ´Ü¾î;
+		rand_counter = rand() % line; 
 		rewind(problem);
 		for (i = 0;i < rand_counter;i++) {
 			fgets(word, max_length, problem);
 		}
-		word[strlen(word) - 1] = '\0';
+		word[strlen(word) - 2] = '\0';
 		fclose(problem);
 		break;
 	default:
 		break;
 	}
 	return word;
-}
-
-// ¹®ÀÚ¿­ ¿ìÃø °ø¹é¹®ÀÚ »èÁ¦ ÇÔ¼ö
-char* rtrim(char* s) {
-	char t[MAX_STR_LEN];
-	char *end;
-
-	// Visual C 2003 ÀÌÇÏ¿¡¼­´Â
-	// strcpy(t, s);
-	// ÀÌ·¸°Ô ÇØ¾ß ÇÔ
-	strcpy(t, s); // ÀÌ°ÍÀº Visual C 2005¿ë
-	end = t + strlen(t) - 1;
-	while (end != t && isspace(*end))
-		end--;
-	*(end + 1) = '\0';
-	s = t;
-
-	return s;
-}
-
-
-// ¹®ÀÚ¿­ ÁÂÃø °ø¹é¹®ÀÚ »èÁ¦ ÇÔ¼ö
-char* ltrim(char *s) {
-	char* begin;
-	begin = s;
-
-	while (*begin != '\0') {
-		if (isspace(*begin))
-			begin++;
-		else {
-			s = begin;
-			break;
-		}
-	}
-
-	return s;
-}
-
-// ¹®ÀÚ¿­ ¾ÕµÚ °ø¹é ¸ðµÎ »èÁ¦ ÇÔ¼ö
-char* trim(char *s) {
-	return rtrim(ltrim(s));
 }
 
 int getTotalLine(FILE* fp) {
@@ -240,3 +206,5 @@ int getTotalLine(FILE* fp) {
 		if (c == '\n') line++;
 	return line+1;
 }
+
+
