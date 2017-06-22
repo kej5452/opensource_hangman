@@ -11,8 +11,13 @@
 void play_game(char* word);
 bool compare_answer(char* word, char answer);
 /**
-*	@typedef User_info
-*	@brief A struct contain User's name and score.
+	@file hangman.c
+*/
+
+/**
+	@typedef User_info
+	@brief A struct contain User's name and score.
+
 */
 typedef struct {
 	char user_name[10];
@@ -51,10 +56,10 @@ int main() {
 		return 0;
 }
 
-/**
-*	@fn play_game	
-*	@param char* word
-*	@brief start game_mode
+/**	
+	@param char* word
+	@brief start game_mode
+	@return void
 */
 void play_game(char* word) {
 	char remained_char[27] = "abcdefghijklmnopqrstuvwxyz";
@@ -108,10 +113,9 @@ void play_game(char* word) {
 
 }
 /**
-*	@fn compare_answer
-*	@brief compare word and user's answer
-*	@param char* word, char answer
-*	@return whether user inserts right answer.
+	@brief compare word and user's answer
+	@param char* word, char answer
+	@return return whether right_char is found.
 */
 bool compare_answer(char* word, char answer) {
 	int i;

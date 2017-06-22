@@ -4,10 +4,13 @@
 
 #define MAX_CHANCE 7
 /**
-*	@fn drawscreen
-*	@param int chance, char* remained_char, char* answer_word
-*	@brief draw hangman and environment of the game.
-*	@return void
+	@file draw.c
+*/
+/**
+	@fn drawscreen
+	@param int chance, char* remained_char, char* answer_word
+	@brief draw hangman and environment of the game.
+	@return void
 */
 void drawscreen(int chance, char* remained_char, char* answer_word) {
 	system("clear");
@@ -44,9 +47,9 @@ void drawscreen(int chance, char* remained_char, char* answer_word) {
 	printf("choose the character you want : ");
 }
 /**
-*	@fn drawintro
-*	@brief draw the first screen of the game. user can choose topic.
-*	@retrun void
+	@fn drawintro
+	@brief draw the first screen of the game. user can choose topic.
+	@retrun void
 */
 void drawintro() {
 	system("clear");

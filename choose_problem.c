@@ -2,11 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "choose_problem.h"
+/**	
+	@file choose_problem.c
+*/
+
 /**
-*	@fn choose_problem
-*	@param int topic
-*	@brief choose the problem with proper topic
-*	@return the problem word
+	@fn choose_problem
+	@param int topic
+	@brief choose the problem with proper topic
+	@return the problem word
 */
 char* choose_problem(int topic) {
 	int max_length = 15;
@@ -55,10 +59,10 @@ char* choose_problem(int topic) {
 	return word;
 }
 /**
-*	@fn getTotalLine
-*	@param FILE* fp
-*	@brief get the number of line in the file
-*	@return the number of line in the file
+	@fn getTotalLine
+	@param FILE* fp
+	@brief get the number of line in the file
+	@return the number of line in the file
 */
 int getTotalLine(FILE* fp) {
 	int line = 0;
